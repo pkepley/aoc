@@ -1,3 +1,10 @@
 # Emacs things
 [#].[#]
 *~
+
+# Ignore all hidden files (mostly just the ipynb checkpoints),
+# except this gitignore file.
+# This is probably bad practice, but my gitignore is the only hidden file
+# that I intend to use.
+.*
+!/.gitignore
