@@ -30,6 +30,29 @@ def compute_checksum(data):
             cnt_exactly_3 = cnt_exactly_3 + 1
     return cnt_exactly_2 * cnt_exactly_3
 
+def common_chars_for_prototype(data):
+    n_codes = len(data)
+    code_len = len(data[1])
+
+    for i in range(n_codes):
+        str1 = data[i]
+        for j in range(i+1, n_codes):
+            str2 = data[j]
+            cnt_diff = 0
+            for k in range(code_len):
+                if str1[k] != str2[k]:
+                    cnt_diff = cnt_diff + 1
+            if cnt_diff == 1:                
+                for k in range(code_len):
+                    if str1[k] != str2[k]:
+                        break
+                code = list(str1)
+                code.pop(k)
+                return "".join(code)
+
+
 if __name__ == "__main__":
     data = read_data("./input/aoc_2.txt")
-    print(compute_checksum(data))
+
+    print("Part 1: {}".format(compute_checksum(data)))
+    print("Part 2: {}".format(common_chars_for_prototype(data)))
