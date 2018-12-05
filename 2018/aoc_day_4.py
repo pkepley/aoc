@@ -84,6 +84,36 @@ def solve_part_1(obs):
     tapm = time_asleep_per_minute(guard_id, obs)
     return guard_id * tapm.index(max(tapm))
 
+def solve_part_2(obs):
+    guard_ids = set()    
+    for oi in obs:
+        guard_ids.add(oi['guard_id'])
+    guard_ids = list(guard_ids)
+    n_guards = len(guard_ids)
+
+    tapm_for_guard = []
+    for guard_id in guard_ids:
+        tapm_for_guard.append(time_asleep_per_minute(guard_id, obs))
+    
+    freq_result = [[] for i in range(59)]
+    for i in range(59):
+        tapm_i = [tapm_for_guard[j][i] for j in range(n_guards)]
+        longest_time_i = max(tapm_i)
+        idx_most_freq_i = tapm_i.index(longest_time_i)        
+        guard_most_freq_i = guard_ids[idx_most_freq_i]        
+        freq_result[i] = [guard_most_freq_i, longest_time_i]
+    
+    # Longest time each minute
+    tapm = map(lambda x : x[1], freq_result)
+
+    # Minute with longest time
+    most_freq_min = tapm.index(max(tapm))
+    
+    # Guard who achieves that longest time
+    guard_at_most_freq = freq_result[most_freq_min][0]
+
+    return most_freq_min * guard_at_most_freq
+
 if __name__ == "__main__":
 
     test_input = '''
@@ -108,10 +138,11 @@ if __name__ == "__main__":
     
     obs = parse_data(test_input)    
     print("Part 1 (Test) : {}".format(solve_part_1(obs)))
+    print("Part 2 (Test) : {}".format(solve_part_2(obs)))
 
-    #with open(
     obs = parse_data(read_data("./input/aoc_4.txt"))
     print("Part 1 : {}".format(solve_part_1(obs)))
+    print("Part 2 : {}".format(solve_part_2(obs)))
 
     
 
