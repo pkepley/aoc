@@ -10,19 +10,24 @@ def parse_pgm(pgm):
     
     for i in range(0, program_len, 4):
         opcode = pgm[i]
-        if opcode != 99:
+
+        # Termination opcode read?
+        if opcode == 99:
+            break
+
+        # Get parameters for opcode and handle
+        else:
             r1 = pgm[i+1]
             r2 = pgm[i+2]
             r3 = pgm[i+3]
-        
-        if opcode == 1:
-            pgm[r3] = pgm[r1] + pgm[r2]
+
+            # Handle opcode
+            if opcode == 1:
+                pgm[r3] = pgm[r1] + pgm[r2]
             
-        elif opcode == 2:
-            pgm[r3] = pgm[r1] * pgm[r2]
-            
-        elif opcode == 99:
-            break
+            elif opcode == 2:
+                pgm[r3] = pgm[r1] * pgm[r2]
+                    
     return pgm
 
 def solve_part_1():
