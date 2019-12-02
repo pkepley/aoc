@@ -5,7 +5,8 @@ def get_input(file_location):
     return contents
             
 
-def parse_pgm(pgm):
+def run_pgm(pgm):
+    pgm = pgm[:]
     program_len = len(pgm)
     
     for i in range(0, program_len, 4):
@@ -30,21 +31,41 @@ def parse_pgm(pgm):
                     
     return pgm
 
-def solve_part_1():
-    pgm = get_input('./input/input_day_2.txt')
-    pgm[1] = 12
-    pgm[2] = 2
+def run_after_modifying(pgm, noun, verb):
+    pgm = pgm[:]    
+    pgm[1] = noun
+    pgm[2] = verb
+    pgm_out = run_pgm(pgm)
 
-    pgm_out = parse_pgm(pgm)
-
-    return pgm_out[0]
+    return pgm_out
     
 
+def solve_part_1():
+    pgm = get_input('./input/input_day_2.txt')
+    pgm_out = run_after_modifying(pgm, 12, 2)
+    
+    return pgm_out[0]
+
+def solve_part_2():
+    pgm = get_input('./input/input_day_2.txt')
+    verb = 44
+    
+    for noun in range(0,100):
+        pgm_out = run_after_modifying(pgm, noun, verb)
+        if pgm_out[0] == 19690720:            
+            break
+
+    return 100 * noun + verb
+
+
 if __name__ == '__main__':
-    assert(parse_pgm([1,0,0,0,99]) == [2,0,0,0,99])
-    assert(parse_pgm([2,3,0,3,99]) == [2,3,0,6,99])
-    assert(parse_pgm([2,4,4,5,99,0]) == [2,4,4,5,99,9801])
-    assert(parse_pgm([1,1,1,4,99,5,6,0,99]) == [30,1,1,4,2,5,6,0,99])
+    assert(run_pgm([1,0,0,0,99]) == [2,0,0,0,99])
+    assert(run_pgm([2,3,0,3,99]) == [2,3,0,6,99])
+    assert(run_pgm([2,4,4,5,99,0]) == [2,4,4,5,99,9801])
+    assert(run_pgm([1,1,1,4,99,5,6,0,99]) == [30,1,1,4,2,5,6,0,99])
 
     s1 = solve_part_1()
     print('Solution to part 1 {0}'.format(s1))
+    s2 = solve_part_2()
+    print('Solution to part 2 {0}'.format(s2))    
+    
