@@ -48,14 +48,14 @@ def solve_part_1():
 
 def solve_part_2():
     pgm = get_input('./input/input_day_2.txt')
-    verb = 44
-    
-    for noun in range(0,100):
-        pgm_out = run_after_modifying(pgm, noun, verb)
-        if pgm_out[0] == 19690720:            
-            break
 
-    return 100 * noun + verb
+    for noun in range(0,100):
+        for verb in range(0, 100):
+            pgm_out = run_after_modifying(pgm, noun, verb)
+            if pgm_out[0] == 19690720:
+                return 100 * noun + verb            
+    
+    return None
 
 
 if __name__ == '__main__':
