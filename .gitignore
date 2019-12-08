@@ -8,3 +8,6 @@
 # that I intend to use.
 .*
 !/.gitignore
+
+# Ignore all pycache files
+*__pycache__
