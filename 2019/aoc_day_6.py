@@ -39,10 +39,10 @@ class orbit_node:
             parent_name = self.parent.name            
 
         str_repr = "orbit_node: name {0} parent {1}\n".format(self.name, parent_name)
-        str_repr += "direct {2} indirect {3} checksum {4}\n".format(self.direct_orbits(),
+        str_repr += "direct {0} indirect {1} checksum {2}\n".format(self.direct_orbits(),
                                                                     self.indirect_orbits(),
                                                                     self.checksum())
-        str_repr += "children {5}".format([c.name for c in self.children])
+        str_repr += "children {0}".format([c.name for c in self.children])
 
         return str_repr
         
@@ -69,17 +69,46 @@ def orbit_tree(orbit_map):
         
     return orbit_tree
 
-        
+
+def oribtal_transfer_count(orbital_tree, node_name_A, node_name_B):
+    node_A = orbital_tree[node_name_A]
+    node_B = orbital_tree[node_name_B]
+
+    # Get entire list of ancestors to A
+    chain_A = []
+    n = node_A
+    while n.parent is not None:
+        chain_A.append(n)
+        n = n.parent
+
+    # Traverse list of ancestors for B until ancestor of B is
+    # found on list of ancestors of A
+    chain_B = []
+    n = node_B        
+    while not n.parent in chain_A:
+        chain_B.append(n)
+        n = n.parent
+    chain_B.append(n)
+
+    return len(chain_B) + chain_A.index(chain_B[-1].parent) - 2
+
 if __name__ == '__main__':
     # Test for part 1
     orbit_map = ['COM)B', 'B)C', 'C)D', 'D)E', 'E)F', 'B)G',
                  'G)H', 'D)I', 'E)J', 'J)K','K)L']    
     ot = orbit_tree(orbit_map)
     assert(ot['COM'].checksum() == 42)
+    
+    # Test for part 2
+    orbit_map = ['COM)B', 'B)C', 'C)D', 'D)E', 'E)F', 'B)G',
+                 'G)H', 'D)I', 'E)J', 'J)K','K)L', 'K)YOU',
+                 'I)SAN']    
+    ot = orbit_tree(orbit_map)
+    assert(oribtal_transfer_count(ot, 'YOU', 'SAN') == 4)
 
-    # Solve part 1
+    # Solve day 6
     orbit_map = get_input('./input/input_day_6.txt')
     ot = orbit_tree(orbit_map)
     print("Solution to Part 1: {}".format(ot['COM'].checksum()))
-    
+    print("Solution to Part 2: {}".format(oribtal_transfer_count(ot, 'YOU', 'SAN')))
     
