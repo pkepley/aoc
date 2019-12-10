@@ -13,4 +13,9 @@ if __name__ == '__main__':
     ic.run([1])
     s1 = ic.outputs[0]
     print("Solution to Part 1: {}".format(s1))
+
+    ic = intcode_computer(pgm)
+    ic.run([2])
+    s2 = ic.outputs[0]
+    print("Solution to Part 2: {}".format(s2))
     
