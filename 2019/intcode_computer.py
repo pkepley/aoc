@@ -8,22 +8,41 @@ def parse_param_modes(param_opcode, n_params):
     
     return param_modes
 
-def get_param(pgm, mode, param):
-    if mode == 0:
-        return pgm[param]
-    
-    elif mode == 1:
-        return param
+class zeroaccess_dict(dict):
+    def __getitem__(self, key):
+        try:
+            val = dict.__getitem__(self, key)
+        except:
+            val = 0
+            self.__setitem__(key, val)
+            
+        return val
 
 class intcode_computer:
     def __init__(self, pgm):
-        self.pgm = pgm[:]
+        # pgm will be saved as a dict instead of a list
+        # because memory needs to be huge, apparently.
+        self.pgm = zeroaccess_dict(zip(list(range(0, len(pgm))), pgm))
         self.ptr = 0
+        self.rel_base = 0
         self.outputs = []
         self.running = True
         
-    def get_input(self, inpt):
-        return inpt
+    def read_param(self, mode, param):
+        if mode == 0:
+            return self.pgm[param]
+        
+        elif mode == 1:
+            return param
+        
+        elif mode == 2:            
+            return self.pgm[self.rel_base + param]
+
+    def write_param(self, mode, param, val):
+         if mode == 0:
+             self.pgm[param] = val
+         elif mode == 2:
+             self.pgm[param + self.rel_base] = val            
         
     def run(self, inputs = []):
         halt_computation = False
@@ -38,42 +57,51 @@ class intcode_computer:
 
             elif opcode == 1:
                 pm1,pm2,pm3 = parse_param_modes(self.pgm[self.ptr], 3)
-                r1 = get_param(self.pgm, pm1, self.pgm[self.ptr+1])
-                r2 = get_param(self.pgm, pm2, self.pgm[self.ptr+2])
-                r3 = self.pgm[self.ptr+3]            
-                self.pgm[r3] = r1 + r2
+                
+                r1 = self.read_param(pm1, self.pgm[self.ptr+1])
+                r2 = self.read_param(pm2, self.pgm[self.ptr+2])                
+                r3 = self.write_param(pm3, self.pgm[self.ptr+3], r1 + r2)
+
                 self.ptr += 4
 
             elif opcode == 2:            
                 pm1,pm2,pm3 = parse_param_modes(self.pgm[self.ptr], 3)
-                r1 = get_param(self.pgm, pm1, self.pgm[self.ptr+1])
-                r2 = get_param(self.pgm, pm2, self.pgm[self.ptr+2])
-                r3 = self.pgm[self.ptr+3]
-                self.pgm[r3] = r1 * r2
+                
+                r1 = self.read_param(pm1, self.pgm[self.ptr+1])
+                r2 = self.read_param(pm2, self.pgm[self.ptr+2])
+                r3 = self.write_param(pm3, self.pgm[self.ptr+3], r1 * r2)
+                
                 self.ptr += 4
 
             elif opcode == 3:
                 if not inputs:
                     halt_computation = True
                 else:
-                    r1 = self.pgm[self.ptr+1]
-                    self.pgm[r1] = inputs[0]
+                    pm1, = parse_param_modes(self.pgm[self.ptr], 1)
+                    self.write_param(pm1, self.pgm[self.ptr+1], inputs[0])
                     inputs.pop(0)
+                    
                     self.ptr += 2
             
             elif opcode == 4:
                 pm1, = parse_param_modes(self.pgm[self.ptr], 1)
+                
                 if pm1 == 0:
-                    r1 = self.pgm[self.ptr+1]
-                else:
-                    r1 = self.ptr + 1                
+                    r1 = self.pgm[self.ptr+1]                    
+                elif pm1 == 1:
+                    r1 = self.ptr + 1                    
+                elif pm1 == 2:
+                    r1 = self.rel_base + self.pgm[self.ptr+1]
+                    
                 self.outputs.append(self.pgm[r1])
                 self.ptr += 2
 
             elif opcode == 5:
                 pm1, pm2 = parse_param_modes(self.pgm[self.ptr], 2)
-                r1 = get_param(self.pgm, pm1, self.pgm[self.ptr+1])
-                r2 = get_param(self.pgm, pm2, self.pgm[self.ptr+2])
+                
+                r1 = self.read_param(pm1, self.pgm[self.ptr+1])
+                r2 = self.read_param(pm2, self.pgm[self.ptr+2])
+                
                 if r1 != 0:
                     self.ptr = r2
                 else:
@@ -81,8 +109,10 @@ class intcode_computer:
                     
             elif opcode == 6:
                 pm1, pm2 = parse_param_modes(self.pgm[self.ptr], 2)
-                r1 = get_param(self.pgm, pm1, self.pgm[self.ptr+1])
-                r2 = get_param(self.pgm, pm2, self.pgm[self.ptr+2])
+                
+                r1 = self.read_param(pm1, self.pgm[self.ptr+1])
+                r2 = self.read_param(pm2, self.pgm[self.ptr+2])
+                
                 if r1 == 0:
                     self.ptr = r2
                 else:
@@ -90,27 +120,38 @@ class intcode_computer:
                     
             elif opcode == 7:
                 pm1, pm2, pm3 = parse_param_modes(self.pgm[self.ptr], 3)
-                r1 = get_param(self.pgm, pm1, self.pgm[self.ptr+1])
-                r2 = get_param(self.pgm, pm2, self.pgm[self.ptr+2])
-                r3 = self.pgm[self.ptr+3]
+                
+                r1 = self.read_param(pm1, self.pgm[self.ptr+1])
+                r2 = self.read_param(pm2, self.pgm[self.ptr+2])
                 
                 if r1 < r2:
-                    self.pgm[r3] = 1
+                    self.write_param(pm3, self.pgm[self.ptr+3], 1)
                 else:
-                    self.pgm[r3] = 0
+                    self.write_param(pm3, self.pgm[self.ptr+3], 0)               
+                    
                 self.ptr += 4
             
             elif opcode == 8:
                 pm1, pm2, pm3 = parse_param_modes(self.pgm[self.ptr], 3)
-                r1 = get_param(self.pgm, pm1, self.pgm[self.ptr+1])
-                r2 = get_param(self.pgm, pm2, self.pgm[self.ptr+2])
+                
+                r1 = self.read_param(pm1, self.pgm[self.ptr+1])
+                r2 = self.read_param(pm2, self.pgm[self.ptr+2])
                 r3 = self.pgm[self.ptr+3]
+                
                 if r1 == r2:
-                    self.pgm[r3] = 1
+                    self.write_param(pm3, self.pgm[self.ptr+3], 1)
                 else:
-                    self.pgm[r3] = 0
+                    self.write_param(pm3, self.pgm[self.ptr+3], 0)
+                    
                 self.ptr += 4
-        
+
+            elif opcode == 9:
+                pm1, = parse_param_modes(self.pgm[self.ptr], 1)
+                
+                r1   = self.read_param(pm1, self.pgm[self.ptr + 1])
+                
+                self.rel_base += r1
+                self.ptr += 2
 
 def test_run_pgm(pgm, inputs):
     ic = intcode_computer(pgm)
@@ -179,3 +220,18 @@ if __name__ == '__main__':
     assert(test_run_pgm(pgm, [8]).outputs == [1000])
     assert(test_run_pgm(pgm, [9]).outputs == [1001])            
 
+
+    # 109,1,204,-1,1001,100,1,100,1008,100,16,101,1006,101,0,99 takes
+    # no input and produces a copy of itself as output.
+    pgm = [109,1,204,-1,1001,100,1,100,1008,100,16,101,1006,101,0,99]
+    assert(test_run_pgm(pgm,[]).outputs == pgm)
+
+    # 1102,34915192,34915192,7,4,7,99,0 should output a 16-digit
+    # number
+    pgm = [1102,34915192,34915192,7,4,7,99,0]
+    assert(test_run_pgm(pgm,[]).outputs == [1219070632396864])
+
+    # 104,1125899906842624,99 should output the large number in the
+    # middle
+    pgm = [104,1125899906842624,99]
+    assert(test_run_pgm(pgm, []).outputs == [1125899906842624])
