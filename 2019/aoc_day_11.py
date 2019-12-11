@@ -1,6 +1,8 @@
 from intcode_computer import intcode_computer
 from intcode_computer import zeroaccess_dict
 
+import matplotlib.pyplot as plt
+
 def get_pgm_input(file_location):
     f = open(file_location)
     contents = [int(i) for i in ''.join(list(f)).split(',')]
@@ -46,8 +48,6 @@ class robot:
             paint_color = self.ic.outputs[-2]
             turn_param  = self.ic.outputs[-1]
 
-            print(self.pos, self.vect, self.current_cell_color(), paint_color, turn_param)
-
             # Paint the current cell
             self.paint_current_cell(paint_color)
 
@@ -60,6 +60,38 @@ class robot:
     def count_painted_cells(self):
         return len(self.painted_cells)
 
+    def paint_job_array(self):
+        # Get the position of white cells
+        white_cells = [pos for pos in self.painted_cells.keys() if
+                       self.painted_cells[pos] == 1]
+
+        # Extract the range of positions
+        xs = [pos[0] for pos in white_cells]
+        ys = [pos[1] for pos in white_cells]
+        xs_min, xs_max = min(xs), max(xs)
+        ys_min, ys_max = min(ys), max(ys)
+
+        # The number of 
+        n_col = xs_max - xs_min + 1
+        n_row = ys_max - ys_min + 1
+        
+        # Store the result in a matrix
+        ascii_cells = [[' ' for j in range(n_col)] for i in range(n_row)]
+        
+        for pos in white_cells:
+            j = pos[0] - xs_min
+            i = ys_max - pos[1]
+            ascii_cells[i][j] = '#'
+
+        return ascii_cells
+
+    def print_paint_job(self):
+        ascii_cells = self.paint_job_array()
+        
+        for row in ascii_cells:
+            print(''.join(row))
+        
+    
 if __name__ == '__main__':
     pgm = get_pgm_input('./input/input_day_11.txt')
     rb = robot(pgm)
@@ -70,3 +102,6 @@ if __name__ == '__main__':
     rb = robot(pgm)
     rb.paint_current_cell(1)
     rb.run()
+    print("Solution to Part 2:")
+    rb.print_paint_job()
+    
