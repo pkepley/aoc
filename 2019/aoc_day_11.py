@@ -16,6 +16,9 @@ class robot:
         self.vect = (0, 1)
         self.ic   = intcode_computer(pgm)
         self.painted_cells = zeroaccess_dict()
+
+        self.pos_history   = []
+        self.paint_history = []
         
     def current_cell_color(self):
         return self.painted_cells[self.pos]
@@ -53,6 +56,10 @@ class robot:
 
             # Turn the robot
             self.turn(turn_param)
+
+            # Record result
+            self.pos_history.append(self.pos)
+            self.paint_history.append(paint_color)
 
             # Advance the robot
             self.move_forward()
