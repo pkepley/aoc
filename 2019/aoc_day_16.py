@@ -36,10 +36,10 @@ def fft(data, n_phases,  pattern = [0,1,0,-1]):
 
 if __name__ == '__main__':
     #print(get_input('input/input_day_16.txt'))
-
-    print(phase(list(range(1, 9)), [0,1,0,-1])) 
-    print(fft(list(range(1, 9)), 4))
+    #print(phase(list(range(1, 9)), [0,1,0,-1])) 
+    #print(fft(list(range(1, 9)), 4))
 
     data = get_input('input/input_day_16.txt')
     fft_result = fft(data, 100)
-    print(fft_result)
+    s1 = ''.join([str(d) for d in fft_result[0:8]])
+    print("Solution Part 1: {}".format(s1))
