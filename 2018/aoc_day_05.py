@@ -7,7 +7,7 @@ def read_data(file_path):
     return "".join(data)
 
 def react_string(in_str):
-    data = list(in_str.replace("\n", ""))
+    data    = list(in_str.replace("\n", ""))
     n_units = len(data)
     stack = []
     for i in range(n_units):
@@ -27,7 +27,7 @@ def remove_and_react(in_str):
     reduced_react_str_lens = []
 
     for letter in letters:    
-        reduced_str = filter(lambda x: x.lower() != letter, in_str)
+        reduced_str = "".join([x for x in list(in_str) if x.lower() != letter])
         reduced_reacted_str = react_string(reduced_str)
         reduced_react_str_lens.append(len(reduced_reacted_str))
     
@@ -41,7 +41,7 @@ if __name__ == "__main__":
     print("Example Part 1 : {}".format(react_string(ex1_str)))
     print("Example Part 2 : {}".format(remove_and_react(ex1_str)))    
 
-    data_str = read_data("./input/aoc_5.txt")
+    data_str = read_data("./input/aoc_05.txt")
     reaction_part_1 = react_string(data_str)
     print("Part 1 : {}".format(len(reaction_part_1)))
     print("Part 2 : {}".format(remove_and_react(data_str)))    

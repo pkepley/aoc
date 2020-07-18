@@ -48,7 +48,7 @@ class node:
 
 def parse_data(data_str):
     split_str = " "
-    data = map(int, data_str.split(split_str))
+    data = [int(x) for x in data_str.split(split_str)]
 
     n_children = 1
     n_metadata = 0
@@ -86,7 +86,7 @@ if __name__ == "__main__":
     print("Example Part 1: {}".format(ex_root_node.sum_meta_below()))
     print("Example Part 2: {}".format(ex_root_node.value()))
 
-    license_file = read_data("./input/aoc_8.txt")
+    license_file = read_data("./input/aoc_08.txt")
     root_node = parse_data(license_file)
     print("Part 1: {}".format(root_node.sum_meta_below()))
     print("Part 2: {}".format(root_node.value()))

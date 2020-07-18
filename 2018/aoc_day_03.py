@@ -5,10 +5,10 @@ def read_data(file_path):
     return data
 
 def map_data(raw_data):
-    data    = map(lambda x: x.split(" "), raw_data)
-    clm_num = map(lambda x: int(x[0].replace("#", "")), data)
-    clm_pos = map(lambda x: map(int, x[2].replace(":","").split(",")), data)
-    clm_shp = map(lambda x: map(int, x[3].split("x")), data)
+    data    = [x.split(" ") for x in  raw_data]
+    clm_num = [int(x[0].replace("#", "")) for x in data]
+    clm_pos = [[int(y) for y in x[2].replace(":","").split(",")] for x in data]
+    clm_shp = [[int(y) for y in x[3].split("x")] for x in data]
     return (clm_num, clm_pos, clm_shp)
 
 def mark_claims (clm_num, clm_pos, clm_shp, fabric_size = 1000):
@@ -46,7 +46,7 @@ def nonoverlap_claim(n_clm, claims_made):
             return i
            
 if __name__ == "__main__":     
-    raw_data = read_data("./input/aoc_3.txt")
+    raw_data = read_data("./input/aoc_03.txt")
     clm_num, clm_pos, clm_shp = map_data(raw_data)
     claims_made = mark_claims(clm_num, clm_pos, clm_shp)
     print("Part 1: {}".format(count_overlap_claims(claims_made)))

@@ -2,7 +2,7 @@ def read_data(file_path):
     with open(file_path, "r") as f:
         data = f.readlines()
     f.close()
-    data = map(lambda x: x.replace("\n",""), data)
+    data = [x.replace("\n","") for x in data]
     return data
 
 def compute_checksum(data):
@@ -52,7 +52,7 @@ def common_chars_for_prototype(data):
 
 
 if __name__ == "__main__":
-    data = read_data("./input/aoc_2.txt")
+    data = read_data("./input/aoc_02.txt")
 
     print("Part 1: {}".format(compute_checksum(data)))
     print("Part 2: {}".format(common_chars_for_prototype(data)))

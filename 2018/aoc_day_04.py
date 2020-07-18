@@ -48,7 +48,7 @@ def compute_time_asleep(obs):
         guard_id, chg_min = oi['guard_id'], oi['chg_min']
         time_asleep = 0
 
-        for i in range(len(chg_min) / 2):
+        for i in range(len(chg_min) // 2):
             time_asleep += (chg_min[2*i+1] - chg_min[2*i])
 
         if guard_id not in total_time_asleep.keys():
@@ -72,7 +72,7 @@ def time_asleep_per_minute(guard_id, obs):
     for oi in obs:
         if oi['guard_id'] == guard_id:
             chg_min = oi['chg_min']            
-            for i in range(len(chg_min) / 2):
+            for i in range(len(chg_min) // 2):
                 sleep_start = chg_min[2*i]
                 sleep_end = chg_min[2*i+1]
                 for j in range(sleep_start, sleep_end):
@@ -104,7 +104,7 @@ def solve_part_2(obs):
         freq_result[i] = [guard_most_freq_i, longest_time_i]
     
     # Longest time each minute
-    tapm = map(lambda x : x[1], freq_result)
+    tapm = [x[1] for x in freq_result]
 
     # Minute with longest time
     most_freq_min = tapm.index(max(tapm))
@@ -140,7 +140,7 @@ if __name__ == "__main__":
     print("Part 1 (Test) : {}".format(solve_part_1(obs)))
     print("Part 2 (Test) : {}".format(solve_part_2(obs)))
 
-    obs = parse_data(read_data("./input/aoc_4.txt"))
+    obs = parse_data(read_data("./input/aoc_04.txt"))
     print("Part 1 : {}".format(solve_part_1(obs)))
     print("Part 2 : {}".format(solve_part_2(obs)))
 

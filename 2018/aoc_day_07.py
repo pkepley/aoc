@@ -1,3 +1,5 @@
+from functools import reduce
+
 def read_data(file_path):
     with open(file_path, "r") as f:
         data = f.readlines()    
@@ -6,10 +8,9 @@ def read_data(file_path):
 
 def parse_data(data):
     split_str = " must be finished before step "
-    tmp_data = map(lambda x: x.split(split_str), 
-                   [d for d in data if split_str in d])
-    parents  = map(lambda x: x[0][-1], tmp_data)
-    children = map(lambda x: x[1][0], tmp_data)
+    tmp_data = [x.split(split_str) for x in [d for d in data if split_str in d]]
+    parents  = [x[0][-1] for x in tmp_data]
+    children = [x[1][0]  for x in tmp_data]
     tree_data =  zip(parents, children)
     return tree_data
 
@@ -64,7 +65,7 @@ Step F must be finished before step E can begin.
     process_order = "".join(parse_tree(tree))
     print("Test Part 1: {}".format(process_order))
 
-    tree_data = parse_data(read_data("./input/aoc_7.txt"))
+    tree_data = parse_data(read_data("./input/aoc_07.txt"))
     tree = build_tree(tree_data)
     process_order = "".join(parse_tree(tree))
     print("Part 1: {}".format(process_order))
