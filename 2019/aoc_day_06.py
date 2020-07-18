@@ -107,7 +107,7 @@ if __name__ == '__main__':
     assert(oribtal_transfer_count(ot, 'YOU', 'SAN') == 4)
 
     # Solve day 6
-    orbit_map = get_input('./input/input_day_6.txt')
+    orbit_map = get_input('./input/input_day_06.txt')
     ot = orbit_tree(orbit_map)
     print("Solution to Part 1: {}".format(ot['COM'].checksum()))
     print("Solution to Part 2: {}".format(oribtal_transfer_count(ot, 'YOU', 'SAN')))

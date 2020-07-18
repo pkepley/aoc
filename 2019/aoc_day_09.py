@@ -7,7 +7,7 @@ def get_pgm_input(file_location):
     return contents
 
 if __name__ == '__main__':
-    pgm = get_pgm_input('./input/input_day_9.txt')
+    pgm = get_pgm_input('./input/input_day_09.txt')
 
     ic = intcode_computer(pgm)
     ic.run([1])

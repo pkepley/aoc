@@ -156,7 +156,7 @@ if __name__ == '__main__':
     assert(solve_part_2(seg_descr_A, seg_descr_B) == 410)    
 
     # Solve puzzle:    
-    seg_descrs = get_input('./input/input_day_3.txt')
+    seg_descrs = get_input('./input/input_day_03.txt')
     seg_descr_A = seg_descrs[0]
     seg_descr_B = seg_descrs[1]
     s1 = solve_part_1(seg_descr_A, seg_descr_B)

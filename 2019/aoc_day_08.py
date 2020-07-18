@@ -54,7 +54,7 @@ def solve_part_2(img_flat, n_row, n_col):
     return msg
         
 if __name__ == '__main__':
-    inpt = get_input('./input/input_day_8.txt')
+    inpt = get_input('./input/input_day_08.txt')
     s1 = solve_part_1(inpt, n_row = 6, n_col = 25)
     s2 = solve_part_2(inpt, n_row = 6, n_col = 25)
     print("Solution to Part 1: {}".format(s1))                       

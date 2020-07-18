@@ -24,7 +24,7 @@ def solve_part_2(masses):
     return sum([total_fuel_requirement(m) for m in masses])
 
 if __name__ == '__main__':
-    masses = read_input('./input/input_day_1.txt')
+    masses = read_input('./input/input_day_01.txt')
     s1 = solve_part_1(masses)
     s2 = solve_part_2(masses)    
     print('Solution to Part 1 {0}'.format(s1))

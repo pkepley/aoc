@@ -174,9 +174,9 @@ if __name__ == '__main__':
     assert(run_pgm(pgm, inpt=9) == [1001])        
 
     # Solutions:
-    s1 = run_pgm(get_pgm_input('./input/input_day_5.txt'), inpt=1)
+    s1 = run_pgm(get_pgm_input('./input/input_day_05.txt'), inpt=1)
     print("Solution to part 1: {}".format(s1[-1]))
 
-    s2 = run_pgm(get_pgm_input('./input/input_day_5.txt'), inpt=5)
+    s2 = run_pgm(get_pgm_input('./input/input_day_05.txt'), inpt=5)
     print("Solution to part 1: {}".format(s2[-1]))
     

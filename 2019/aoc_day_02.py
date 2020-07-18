@@ -41,13 +41,13 @@ def run_after_modifying(pgm, noun, verb):
     
 
 def solve_part_1():
-    pgm = get_input('./input/input_day_2.txt')
+    pgm = get_input('./input/input_day_02.txt')
     pgm_out = run_after_modifying(pgm, 12, 2)
     
     return pgm_out[0]
 
 def solve_part_2():
-    pgm = get_input('./input/input_day_2.txt')
+    pgm = get_input('./input/input_day_02.txt')
 
     for noun in range(0,100):
         for verb in range(0, 100):

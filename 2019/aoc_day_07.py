@@ -86,7 +86,7 @@ if __name__ == '__main__':
     assert(find_highest_signal(pgm, feedback_mode = 1) == result)
 
     # Solve Part 1 and 2
-    pgm = get_pgm_input('./input/input_day_7.txt')
+    pgm = get_pgm_input('./input/input_day_07.txt')
     s1 = find_highest_signal(pgm, feedback_mode=0)
     s2 = find_highest_signal(pgm, feedback_mode=1)    
     print("Solution to Part 1: {}".format(s1))
