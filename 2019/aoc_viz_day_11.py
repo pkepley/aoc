@@ -44,7 +44,6 @@ class animator:
         self.ax = ax
         self.im = ax.imshow(self.cells, animated=True, vmin=0,
                             vmax = 1, cmap=plt.get_cmap('gray'))
-        #self.im = plt.imshow(self.cells, cmap=plt.get_cmap('gray'))        
         self.ax.set_xticks([],[])
         self.ax.set_yticks([],[])
 
@@ -60,9 +59,14 @@ class animator:
             
         j = self.xs[k]  - self.xs_min
         i = self.ys_max - self.ys[k]
-        self.cells[i, j] = self.paint_history[k]        
-        self.im.set_array(self.cells)
-        #self.ax.imshow(self.cells)
+        self.cells[i, j] = self.paint_history[k]
+
+        # set the value at the current cell to 0.5 in the plot
+        # to show the robot's location
+        cells_plot = np.copy(self.cells)
+        cells_plot[i,j] = 0.5
+
+        self.im.set_array(cells_plot)
         return self.im,
 
 
