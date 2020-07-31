@@ -69,8 +69,9 @@ class robot:
 
     def paint_job_array(self):
         # Get the position of white cells
-        white_cells = [pos for pos in self.painted_cells.keys()
-                       if self.painted_cells[pos] == 1]
+        white_cells = [
+            pos for pos in self.painted_cells.keys() if self.painted_cells[pos] == 1
+        ]
 
         # Extract the range of positions
         xs = [pos[0] for pos in white_cells]
