@@ -67,15 +67,16 @@ def solve_part_1(parsed_out):
 
 if __name__ == "__main__":
     test_input = """
-..#..........
-..#..........
-#######...###
-#.#...#...#.#
-#############
-..#...#...#..
-..#####...^..
-"""
+    ..#..........
+    ..#..........
+    #######...###
+    #.#...#...#.#
+    #############
+    ..#...#...#..
+    ..#####...^..
+    """
 
+    test_input = test_input.replace(" ", "").replace("\t", "")
     parsed_out = [list(r) for r in test_input.split("\n")]
     parsed_out = [r for r in parsed_out if len(r) > 0]
     assert solve_part_1(parsed_out) == 76
