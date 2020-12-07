@@ -64,12 +64,6 @@ function find_expense_tuple(expenses, expense_sum, tuple_length)
 	return nothing
 end
 
-# ╔═╡ 8523ecee-382e-11eb-1052-7b889fa8eaf5
-begin 
-	tmp = Dict([(x, i) for (i,x) ∈ enumerate(reverse(1:10))])  
-	tmp[1]
-end
-
 # ╔═╡ 62f21c18-3810-11eb-31d3-b942814b7d4d
 function find_expense_pair(expenses, expense_sum)
 	expenses = sort(expenses)
@@ -125,7 +119,6 @@ println("Day 2. Part 2: ", part_2_soln)
 # ╠═bf77553e-3806-11eb-3c35-852c9485479b
 # ╠═43cc99f0-3813-11eb-3cc4-2f8cbc59cf24
 # ╠═b8642d9c-3821-11eb-2ff6-3328e0095b7c
-# ╠═8523ecee-382e-11eb-1052-7b889fa8eaf5
 # ╠═62f21c18-3810-11eb-31d3-b942814b7d4d
 # ╠═2618a7a6-3812-11eb-1a7a-5f867dd8042f
 # ╠═a3039550-382b-11eb-024b-a1a2428752cd
