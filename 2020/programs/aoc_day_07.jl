@@ -9,7 +9,7 @@ using InteractiveUtils
 🎄 Solutions for Day 7! 🎄
 
 🌟 Part 1: Count all bags that can contain your bag 👜!
-Part 2: Count all bags that your bag must contain 👜!
+🌟 Part 2: Count all bags that your bag must contain 👜!
 =#
 
 # ╔═╡ 0f6875f6-39d2-11eb-20bc-adca71124e23
@@ -103,10 +103,32 @@ function get_ancestors(rule_graph, bag)
 	return [b for b ∈ bag_types if bag_discovered[b] == true & cmp(b, bag) != 0] 
 end
 
+# ╔═╡ 95c96436-3a4d-11eb-1009-5ddfdc4db6c0
+function count_children(rule_graph, bag)
+	predecessors, contents = rule_graph[bag]
+	println(contents)
+	
+	if contents == Dict()
+		return 0
+	else
+		return sum([contents[b] * 1 for b ∈ keys(contents)]) +
+			   sum([contents[b] * count_children(rule_graph, b) 
+				    for b ∈ keys(contents)])
+	end
+end
+
 # ╔═╡ 8a832260-39ee-11eb-01cc-cb09d57fe8f6
 function solve_prob_1(bag_rule_descriptions, my_bag_type="shiny gold")
 	bag_rule_graph = rule_graph(bag_rule_descriptions)	
+	
 	return length(get_ancestors(bag_rule_graph, my_bag_type))	
+end
+
+# ╔═╡ ae6d5744-3a4e-11eb-1344-ddd3f1680618
+function solve_prob_2(bag_rule_descriptions, my_bag_type="shiny gold")
+	bag_rule_graph = rule_graph(bag_rule_descriptions)	
+	
+	return count_children(bag_rule_graph, my_bag_type)
 end
 
 # ╔═╡ 37216bf0-39d4-11eb-3397-9fb7369f0f1c
@@ -137,7 +159,11 @@ dark violet bags contain no other bags."""
 end
 
 # ╔═╡ 304fe856-39ea-11eb-20af-c53e3b6d9a2b
-@assert solve_prob_1(example_bag_rules_1, "shiny gold") == 4
+begin
+	@assert solve_prob_1(example_bag_rules_1, "shiny gold") == 4
+	@assert solve_prob_2(example_bag_rules_1, "shiny gold") == 32
+	@assert solve_prob_2(example_bag_rules_2, "shiny gold") == 126
+end
 
 # ╔═╡ 41b86a98-39d2-11eb-2a5b-29a9f516215a
 ############################ Day 7 Solution #################################
@@ -157,6 +183,12 @@ part_1_soln = solve_prob_1(problem_bag_rules, "shiny gold")
 # ╔═╡ 2ba2dbbc-3a31-11eb-13bc-8542964983ec
 println("Day 7: Part 1: ", part_1_soln)
 
+# ╔═╡ d3d3840e-3a4e-11eb-289a-f90ae5d35f88
+part_2_soln = solve_prob_2(problem_bag_rules, "shiny gold")
+
+# ╔═╡ d9c4e8f8-3a4e-11eb-3fa4-f348ec8c0f63
+println("Day 7: Part 2: ", part_2_soln)
+
 # ╔═╡ Cell order:
 # ╠═3e7eb81e-3a31-11eb-3ba0-199c4bc52f24
 # ╠═0f6875f6-39d2-11eb-20bc-adca71124e23
@@ -164,9 +196,13 @@ println("Day 7: Part 1: ", part_1_soln)
 # ╠═bc391a24-39e1-11eb-3609-1f26acb50fc4
 # ╠═f9530ed6-39e3-11eb-096a-7142185d0bde
 # ╠═97b117a8-3a2d-11eb-38cf-5f401d063f75
+# ╠═95c96436-3a4d-11eb-1009-5ddfdc4db6c0
 # ╠═8a832260-39ee-11eb-01cc-cb09d57fe8f6
+# ╠═ae6d5744-3a4e-11eb-1344-ddd3f1680618
 # ╠═37216bf0-39d4-11eb-3397-9fb7369f0f1c
 # ╠═304fe856-39ea-11eb-20af-c53e3b6d9a2b
 # ╠═41b86a98-39d2-11eb-2a5b-29a9f516215a
 # ╠═e2e290da-39ee-11eb-3f87-97ecb6777676
 # ╠═2ba2dbbc-3a31-11eb-13bc-8542964983ec
+# ╠═d3d3840e-3a4e-11eb-289a-f90ae5d35f88
+# ╠═d9c4e8f8-3a4e-11eb-3fa4-f348ec8c0f63
