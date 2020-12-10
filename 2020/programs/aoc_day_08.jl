@@ -21,7 +21,7 @@ end
 # ╔═╡ 2b544e8c-3a8d-11eb-3934-49cb1f5488a6
 function parse_op(op_str)
 	operation = split(op_str, ' ', keepempty = false)	
-	println(operation)
+
 	return (operation[1], parse(Int, operation[2]))
 end
 
@@ -34,17 +34,16 @@ function parse_program(pgm)
 end
 
 # ╔═╡ 1740ecec-3a8e-11eb-2b90-b99dc792e5a2
-function execute_until_reloop(pgm)
-	instructions = parse_program(pgm)
-	n_instructions = length(instructions)
+function execute_until_loop_or_halt(pgm_instructions)
+	n_instructions = length(pgm_instructions)
 	
 	# execute until we see an index used twice
 	operation_executed = zeros(Bool, n_instructions)
 	idx, acc = 1, 0	
 	
-	while operation_executed[idx] == false
+	while (operation_executed[idx] == false) & (idx < n_instructions)
 		operation_executed[idx] = true
-		operation, argument = instructions[idx]
+		operation, argument = pgm_instructions[idx]
 		
 		if operation == "acc"
 			acc += argument
@@ -58,13 +57,14 @@ function execute_until_reloop(pgm)
 		end
 	end
 	
-	return acc
-	
+	return acc, idx
 end
 
 # ╔═╡ f1109a84-3a8f-11eb-3ca8-2fdbdd1cc29a
 function solve_prob_1(pgm)
-	return execute_until_reloop(pgm)
+	acc, idx = execute_until_loop_or_halt(pgm)
+	
+	return acc
 end
 
 # ╔═╡ 8e4e5560-3a8c-11eb-2612-577833ceee7e
@@ -79,19 +79,23 @@ acc +1
 jmp -4
 acc +6
 """
+	
+	example_pgm = parse_program(example_input)
 end
 
 # ╔═╡ f3f072bc-3a8d-11eb-3b54-719f2924e9d2
-@assert solve_prob_1(example_input) == 5
+@assert solve_prob_1(example_pgm) == 5
 
 # ╔═╡ ed7ca23c-3a8f-11eb-34fe-dd7cf712377b
-############################ Day 8 Solution #################################
+############################ Day 8 Solution ############################
 begin
 	input_path = "../input/input_day_08.txt"	
 	
-	problem_pgm = open(input_path) do file
+	problem_pgm_str = open(input_path) do file
 		read(file, String)
 	end	
+	
+	problem_pgm = parse_program(problem_pgm_str)
 end
 
 # ╔═╡ 5b37cd42-3a90-11eb-25a3-6105e801b231
