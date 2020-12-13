@@ -6,13 +6,13 @@ using InteractiveUtils
 
 # ╔═╡ 0b6188b0-3a8b-11eb-112c-77145e1d99b5
 #= 
-🎁 Solutions for Day 12! 🎁
+Today's solutions!
 
 🌟 Part 1: 
 =#
 
 # ╔═╡ b0bbb420-3d62-11eb-050a-99a665672dba
-DAY_NUMBER = 12
+DAY_NUMBER = "FILL_ME_IN" 
 
 # ╔═╡ 81e88cb0-3a8b-11eb-3aba-a3509bff5912
 function parse_input(s)
