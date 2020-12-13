@@ -8,7 +8,9 @@ using InteractiveUtils
 #= 
 ☃️ Solutions for Day 11! ☃️
 
-🌟 Part 1: Count stable seating distribution.
+🌟 Part 1: Count stable seating distribution v1. 🪑
+🌟 Part 2: Count stable seating distribution v2. 🪑
+
 =#
 
 # ╔═╡ 5fd23dee-3cf5-11eb-0d23-ef4188aa1dd3
@@ -50,6 +52,76 @@ function fill_seats_v1(seating)
 	return new_seating
 end
 
+# ╔═╡ 02d2f120-3d03-11eb-0c6f-f76e9a8b9461
+function count_occupied_neighbors_v2(i, j, seating)
+	(nrow, ncol) = size(seating)	
+	n_occupied = 0
+	
+	for di = -1:1
+		for dj = -1:1
+			ic, jc = i+di, j + dj
+			
+			# if still in bounds and not looking at floor...
+			while (ic, jc) != (i, j) && ic > 0 && ic <= nrow && 
+				      jc > 0   && jc <= ncol && seating[ic, jc] == '.'
+				ic, jc = ic+di, jc+dj
+			end
+			
+			# did we find a different position with an occupied seat
+			# in our search along (di,dj) direction?
+			if (i,j) != (ic,jc) && ic > 0 && jc > 0 && ic <= nrow && jc <= ncol
+				if seating[ic, jc] == '#'
+					n_occupied += 1
+				end
+			end
+		end
+	end
+		
+	return n_occupied
+	
+end
+
+# ╔═╡ 63e6b4a6-3d08-11eb-3d12-d96373dcb32a
+############################ Examples+Tests ################################
+begin 
+	example_input2=
+"""
+.##.##.
+#.#.#.#
+##...##
+...L...
+##...##
+#.#.#.#
+.##.##.
+"""	
+	example_seating2 = parse_input(example_input2)
+end
+
+# ╔═╡ 334b564c-3d00-11eb-2407-d516aec2a743
+function fill_seats_v2(seating)
+	(nrow, ncol) = size(seating)
+	new_seating = copy(seating)
+	
+	for i = 1:nrow
+		for j = 1:ncol
+			n_occupied_nbrs = count_occupied_neighbors_v2(i, j, seating)
+			
+			# if seat is empty && no occupied neighbors
+			if seating[i, j] == 'L' && n_occupied_nbrs == 0
+				new_seating[i, j] = '#'
+			end
+			
+			# if set is occupied and >= 4 neihgbors, seat becomes empty
+			if seating[i, j] == '#' && n_occupied_nbrs >= 5
+				new_seating[i, j] = 'L'			
+			end
+			
+		end
+	end
+	
+	return new_seating
+end
+
 # ╔═╡ 7b288b3c-3cfe-11eb-08d9-130222a937d1
 function fill_until_stabilized(seating, fill_seats)
 	old_seating = copy(seating)
@@ -66,13 +138,13 @@ end
 # ╔═╡ f1109a84-3a8f-11eb-3ca8-2fdbdd1cc29a
 function solve_prob_1(seating)
 	new_seating = fill_until_stabilized(seating, fill_seats_v1)
-	
 	return sum(new_seating .== '#')
 end
 
 # ╔═╡ 129f488c-3a93-11eb-260e-8921353e1039
 function solve_prob_2(seating)
-	return nothing
+	new_seating = fill_until_stabilized(seating, fill_seats_v2)
+	return sum(new_seating .== '#')
 end
 
 # ╔═╡ 8e4e5560-3a8c-11eb-2612-577833ceee7e
@@ -97,7 +169,7 @@ end
 # ╔═╡ f3f072bc-3a8d-11eb-3b54-719f2924e9d2
 begin
  	@assert solve_prob_1(example_seating) == 37
- 	#@assert solve_prob_2(example_pgm) == ???
+ 	@assert solve_prob_2(example_seating) == 26
 end
 
 # ╔═╡ ed7ca23c-3a8f-11eb-34fe-dd7cf712377b
@@ -119,15 +191,18 @@ part_1_soln = solve_prob_1(problem_seating)
 println("Day 11: Part 1: ", part_1_soln)
 
 # ╔═╡ 3180ae1c-3a93-11eb-01ab-13cc9be93b67
-#part_2_soln = solve_prob_2(problem_pgm)
+part_2_soln = solve_prob_2(problem_seating)
 
 # ╔═╡ 2c64697a-3a96-11eb-34ea-ff7f4a67aa99
-#println("Day 11: Part 2: ", part_2_soln)
+println("Day 11: Part 2: ", part_2_soln)
 
 # ╔═╡ Cell order:
 # ╠═0b6188b0-3a8b-11eb-112c-77145e1d99b5
 # ╠═5fd23dee-3cf5-11eb-0d23-ef4188aa1dd3
 # ╠═e717faf6-3cea-11eb-0633-6366b4fb40d1
+# ╠═02d2f120-3d03-11eb-0c6f-f76e9a8b9461
+# ╠═63e6b4a6-3d08-11eb-3d12-d96373dcb32a
+# ╠═334b564c-3d00-11eb-2407-d516aec2a743
 # ╠═7b288b3c-3cfe-11eb-08d9-130222a937d1
 # ╠═f1109a84-3a8f-11eb-3ca8-2fdbdd1cc29a
 # ╠═129f488c-3a93-11eb-260e-8921353e1039
