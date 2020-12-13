@@ -6,13 +6,13 @@ using InteractiveUtils
 
 # ╔═╡ 0b6188b0-3a8b-11eb-112c-77145e1d99b5
 #= 
-Today's Solutions! 
+🎁 Solutions for Day 12! 🎁
 
 🌟 Part 1: 
 =#
 
 # ╔═╡ b0bbb420-3d62-11eb-050a-99a665672dba
-DAY_NUMBER = "FILL_ME_IN!"
+DAY_NUMBER = 12
 
 # ╔═╡ 81e88cb0-3a8b-11eb-3aba-a3509bff5912
 function parse_input(s)
@@ -21,28 +21,28 @@ function parse_input(s)
 end
 
 # ╔═╡ f1109a84-3a8f-11eb-3ca8-2fdbdd1cc29a
-function solve_prob_1()
+function solve_prob_1(inpt)
 	return nothing
 end
 
 # ╔═╡ 129f488c-3a93-11eb-260e-8921353e1039
-function solve_prob_2(pgm)
+function solve_prob_2(inpt)
 	return nothing
 end
 
 # ╔═╡ 8e4e5560-3a8c-11eb-2612-577833ceee7e
 ############################ Examples+Tests ################################
 begin 
-	example_input="""
+	example_input_str="""
 ???
 """
-	example_pgm = parse_input(example_input)
+	example_input = parse_input(example_input_str)
 end
 
 # ╔═╡ f3f072bc-3a8d-11eb-3b54-719f2924e9d2
 begin
-	@assert solve_prob_1(example_pgm) == 0
-	@assert solve_prob_2(example_pgm) == 0
+	@assert solve_prob_1(example_input) == 0
+	@assert solve_prob_2(example_input) == 0
 end
 
 # ╔═╡ ed7ca23c-3a8f-11eb-34fe-dd7cf712377b
@@ -51,10 +51,11 @@ begin
 	input_path = "../input/input_day_$DAY_NUMBER.txt"
 	
 	problem_input_str = open(input_path) do file
+
 		read(file, String)
 	end	
 	
-	#problem_input = parse_program(problem_input)
+	problem_input = parse_input(problem_input_str)
 end
 
 # ╔═╡ 5b37cd42-3a90-11eb-25a3-6105e801b231
