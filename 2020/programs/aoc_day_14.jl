@@ -8,7 +8,8 @@ using InteractiveUtils
 #= 
 🎅 Solutions for Day 14! 🎅
 
-🌟 Part 1: Apply a bit masks and compute some values in memory 😷
+🌟 Part 1: Apply bit masks to values in memory 😷
+🌟 Part 2: Apply bit masks to addresses and store values in memory 😷
 =#
 
 # ╔═╡ b0bbb420-3d62-11eb-050a-99a665672dba
@@ -33,6 +34,31 @@ function apply_bitmask(mask, bit_rep)
 	end	
 	
 	return bit_rep
+end
+
+# ╔═╡ 7c7a650c-3e85-11eb-0314-85e37736b9a0
+function apply_bitmask_floating(mask, bit_rep)
+	bit_reps_choice = [[b] for b in bit_rep]
+	
+	# convert to all floating values
+	for i = 1:36
+		if mask[i] == '0'
+			bit_reps_choice[i] = [bit_rep[i]]
+		elseif mask[i] == '1'
+			bit_reps_choice[i] = [true]
+		elseif mask[i] == 'X'
+			bit_reps_choice[i] = [true, false]
+		end
+	end	
+	
+	# collect all floating values using the approach here:
+	#    https://tinyurl.com/y9a5wj2b (julia discourse link)
+	floating_bit_reps = []
+	for br ∈ Base.Iterators.product(bit_reps_choice...)
+		push!(floating_bit_reps, br)
+	end
+	
+	return floating_bit_reps
 end
 
 # ╔═╡ ce828c82-3e17-11eb-38ce-17ed0345f8ae
@@ -89,7 +115,7 @@ function from_bits(bit_rep, n_bits=36)
 	return n
 end
 
-# ╔═╡ f1109a84-3a8f-11eb-3ca8-2fdbdd1cc29a
+# ╔═╡ 129f488c-3a93-11eb-260e-8921353e1039
 function solve_prob_1(inpt)
 	instructions = parse_input(inpt)
 	n_input = length(instructions)
@@ -108,34 +134,61 @@ function solve_prob_1(inpt)
 		end
 	end
 	
-	s = 0
-	for k in keys(memory)
-		s += from_bits(memory[k])
-	end
-	
-	return s
+	return sum([from_bits(memory[k]) for k in keys(memory)])
 end
 
-# ╔═╡ 129f488c-3a93-11eb-260e-8921353e1039
+# ╔═╡ f1109a84-3a8f-11eb-3ca8-2fdbdd1cc29a
 function solve_prob_2(inpt)
-	return nothing
+	instructions = parse_input(inpt)
+	n_input = length(instructions)
+	memory = Dict()
+
+	# temporary mask
+	curr_mask = "X"^36
+	
+	for i = 1:length(instructions)
+		if instructions[i].kind == "mask"
+			curr_mask = instructions[i].mask
+		else
+			# value to store
+			val  = instructions[i].val
+			
+			# compute the addresses where we store the value
+			addr = to_bits(instructions[i].addr)
+			floating_addresses = apply_bitmask_floating(curr_mask, addr)
+			floating_addresses = map(from_bits, floating_addresses)
+			
+			for addr ∈ floating_addresses
+				memory[addr] = val
+			end			
+		end
+	end
+	
+	# 	
+	return sum([from_bits(memory[k]) for k in keys(memory)])	
 end
 
 # ╔═╡ 8e4e5560-3a8c-11eb-2612-577833ceee7e
 ############################ Examples+Tests ################################
 begin 
-	example_input="""
+	example_input_1="""
 mask = XXXXXXXXXXXXXXXXXXXXXXXXXXXXX1XXXX0X
 mem[8] = 11
 mem[7] = 101
 mem[8] = 0
 """
+	example_input_2="""
+mask = 000000000000000000000000000000X1001X
+mem[42] = 100
+mask = 00000000000000000000000000000000X0XX
+mem[26] = 1	
+"""
 end
 
 # ╔═╡ f3f072bc-3a8d-11eb-3b54-719f2924e9d2
 begin
-	@assert solve_prob_1(example_input) == 165
-	@assert solve_prob_2(example_input) == nothing
+	@assert solve_prob_1(example_input_1) == 165
+	@assert solve_prob_2(example_input_2) == 208
 end
 
 # ╔═╡ ed7ca23c-3a8f-11eb-34fe-dd7cf712377b
@@ -156,22 +209,23 @@ part_1_soln = solve_prob_1(problem_input)
 println("Day $DAY_NUMBER: Part 1: $part_1_soln")
 
 # ╔═╡ 3180ae1c-3a93-11eb-01ab-13cc9be93b67
-#part_2_soln = solve_prob_2(problem_input)
+part_2_soln = solve_prob_2(problem_input)
 
 # ╔═╡ 2c64697a-3a96-11eb-34ea-ff7f4a67aa99
-#println("Day $DAY_NUMBER: Part 2: $part_2_soln")
+println("Day $DAY_NUMBER: Part 2: $part_2_soln")
 
 # ╔═╡ Cell order:
 # ╠═0b6188b0-3a8b-11eb-112c-77145e1d99b5
 # ╠═b0bbb420-3d62-11eb-050a-99a665672dba
 # ╠═f730c4dc-3e38-11eb-18b0-cb8b0ea74f48
-# ╠═8ca9fd12-3e39-11eb-2073-e7b6d15ff50c
 # ╠═81e88cb0-3a8b-11eb-3aba-a3509bff5912
 # ╠═47129742-3e38-11eb-15dc-abf9dadf773b
+# ╠═8ca9fd12-3e39-11eb-2073-e7b6d15ff50c
+# ╠═7c7a650c-3e85-11eb-0314-85e37736b9a0
 # ╠═ce828c82-3e17-11eb-38ce-17ed0345f8ae
 # ╠═bcbe1518-3e18-11eb-0132-bf592fa8239d
-# ╠═f1109a84-3a8f-11eb-3ca8-2fdbdd1cc29a
 # ╠═129f488c-3a93-11eb-260e-8921353e1039
+# ╠═f1109a84-3a8f-11eb-3ca8-2fdbdd1cc29a
 # ╠═8e4e5560-3a8c-11eb-2612-577833ceee7e
 # ╠═f3f072bc-3a8d-11eb-3b54-719f2924e9d2
 # ╠═ed7ca23c-3a8f-11eb-34fe-dd7cf712377b
