@@ -25,28 +25,33 @@ end
 # ╔═╡ 2ae9a218-3edd-11eb-2302-0fa95ad7e14b
 function play_elf_game(starting_numbers, stop_at = 2020)
 	n_starting = length(starting_numbers)	
-	last_repetitions = Dict()
+	max_start = maximum(starting_numbers)
+
+	# use a lookup table for last_repetition. in the (i+1)^st entry will
+	# store the last time the number i was spoken. the default value will
+	# be -1, which indicates entry i has not been spoken yet.
+	last_repeated = fill(-1, maximum([stop_at, max_start]) + 1)
+	
+	# starting values, make these accessible outside of loop
 	last_spoken = nothing
 	next_spoken = nothing 
 	
 	for i = 1 : stop_at		
 		last_spoken = next_spoken
-		
-		# next_spoken is given when we're starting out
-		if i <= n_starting			
+
+		if i <= n_starting # next_spoken is given when we're starting out
 			next_spoken = starting_numbers[i]
 		end
-		
-		# Number is new!
-		if !haskey(last_repetitions, next_spoken)
-			last_repetitions[next_spoken] = (-Inf, i)
+				
+		if last_repeated[next_spoken + 1] == -1  # Number is new!
+			last_repeated[next_spoken + 1] = i
 			next_spoken = 0
-		# Number has been seen before, compute how long ago for next_spoken
-		else			
-			last_seen = (last_repetitions[next_spoken][2], i)
-			last_repetitions[next_spoken] = last_seen
-			next_spoken = last_seen[2] - last_seen[1]
+		else # Number seen before. Next spoken is time since this was last spoken.
+			last_seen = last_repeated[next_spoken + 1]
+			last_repeated[next_spoken + 1] = i
+			next_spoken = i - last_seen			
 		end
+		
 	end
 	
 	return last_spoken
