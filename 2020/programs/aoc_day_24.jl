@@ -54,32 +54,38 @@ function initial_flips(instructions)
 		end
 	end
 	
-	return [k for k ∈ keys(flipped_tiles) if flipped_tiles[k]]
+	for k ∈ keys(flipped_tiles)
+		if !flipped_tiles[k]
+			delete!(flipped_tiles, k)
+		end
+	end
+	
+	return flipped_tiles
 end
 
 # ╔═╡ 40e1d390-48aa-11eb-0694-a50484f5f901
-function update_tiles(flipped_tiles)
-	flipped_tiles = deepcopy(flipped_tiles)	
+function update_tiles(flipped_tiles)	
 	dirs = [[ 1, 2], [ 2, 0], [ 1, -2], [-1,-2], [-2, 0], [-1,  2]]
 
 	# candidate positions
 	candidates = Set()	
-	for pos ∈ flipped_tiles
+	for pos ∈ keys(flipped_tiles)
 		push!(candidates, pos)
+		
 		for d ∈ dirs
 			push!(candidates, pos + d)
 		end
 	end
 	
-	# update the tiles based on some lifeish rules
+	# update the tiles based on some conway life game-ish rules
 	updated_tiles = Dict()	
 	for pos ∈ candidates		
 		nbrs = [pos + d for d ∈ dirs]
-		flipped_nbrs = [n for n ∈ nbrs if n ∈ flipped_tiles]
+		flipped_nbrs = [n for n ∈ nbrs if haskey(flipped_tiles, n)]
 		n_nbrs_flipped = length(flipped_nbrs)
 				
 		# these tiles are white
-		if pos ∉ flipped_tiles
+		if !haskey(flipped_tiles, pos)
 			# if it has exactly 2 flipped neighbors, flip to black
 			updated_tiles[pos] = (n_nbrs_flipped == 2)			
 			
@@ -93,8 +99,15 @@ function update_tiles(flipped_tiles)
 			end
 		end
 	end
+	
+	# remove any non-black tiles
+	for k ∈ keys(updated_tiles)
+		if !updated_tiles[k]
+			delete!(updated_tiles, k)
+		end
+	end
 
-	return [k for k ∈ keys(updated_tiles) if updated_tiles[k]]	
+	return updated_tiles
 end
 
 # ╔═╡ f1109a84-3a8f-11eb-3ca8-2fdbdd1cc29a
@@ -102,7 +115,7 @@ function solve_prob_1(inpt)
     tile_instructions = parse_input(inpt)
 	flipped_tiles = initial_flips(tile_instructions)
 	
-    return length(flipped_tiles)
+    return length(keys(flipped_tiles))
 end
 
 # ╔═╡ 129f488c-3a93-11eb-260e-8921353e1039
