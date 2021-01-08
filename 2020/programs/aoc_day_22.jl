@@ -20,8 +20,8 @@ function parse_input(s)
     rows = split(s, "\n\n", keepempty=false)
 	rows = map(s -> split(s, "\n", keepempty=false), rows)
 	
-	deck_p1 = map(s -> parse(Int, s), rows[1][2:end])
-	deck_p2 = map(s -> parse(Int, s), rows[2][2:end])	
+	deck_p1 = Vector(map(s -> parse(Int, s), rows[1][2:end]))
+	deck_p2 = Vector(map(s -> parse(Int, s), rows[2][2:end]))
 	
     return deck_p1, deck_p2
 end
@@ -33,10 +33,8 @@ function play_combat(deck_p1, deck_p2)
 	
 	while !isempty(deck_p1) && !isempty(deck_p2)
 		# draw from front of list
-		c1 = deck_p1[1]
-		c2 = deck_p2[1]
-		deleteat!(deck_p1, 1)
-		deleteat!(deck_p2, 1)
+		c1 = popfirst!(deck_p1)
+		c2 = popfirst!(deck_p2)
 		
 		# p1 won, place cards on bottom of p1's deck as c1, c2
 		if c1 > c2
@@ -76,10 +74,8 @@ function play_recursive_combat(deck_p1, deck_p2)
 		push!(previous_round_decks, [deepcopy(deck_p1), deepcopy(deck_p2)])
 		
 		# draw from front of list as per normal
-		c1 = deck_p1[1]
-		c2 = deck_p2[1]
-		deleteat!(deck_p1, 1)
-		deleteat!(deck_p2, 1)
+		c1 = popfirst!(deck_p1)
+		c2 = popfirst!(deck_p2)
 		
 		# determine if we can recurse
 		if c1 <= length(deck_p1) && c2 <= length(deck_p2)
