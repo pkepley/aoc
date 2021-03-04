@@ -3,6 +3,7 @@ SRC := src
 BIN := bin
  
 SOURCES := $(wildcard $(SRC)/*.hs)
+OBJECTS := $(wildcard $(SRC)/*.hi $(SRC)/*.o)
 PROGS   := $(patsubst $(SRC)/%.hs, $(BIN)/%, $(SOURCES))
 
 .PHONY: directory
@@ -17,4 +18,4 @@ $(BIN)/%: $(SRC)/%.hs
 	$(CC) $< -o $@ 
 
 clean:
-	rm $(SRC)/*.hi $(SRC)/*.o
+	rm $(OBJECTS)
